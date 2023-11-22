@@ -1,3 +1,4 @@
+import { Response } from "../classes/responseclass.js"
 import { addNewUser, findUserByemail } from "../database/querreis.js"
 import {hashPassword,comparePassword} from "../utilities/paswordUtils.js"
 import { genToken } from "../utilities/tokenUtils.js"
@@ -10,14 +11,16 @@ try {
     const userAddedToDB=await addNewUser({...userData,password:hashedPassword})
 if(userAddedToDB){
     const token=await genToken(userAddedToDB._id)
-    res.cookie("token",token,{httpOnly:true})
-    res.status(200).send({status:true,message:"user registered sucessfully"})
+    const addedUserResp=new Response(true,{token:token},"user registered sucessfully")
+    res.status(200).send(addedUserResp)
 }else{
-    res.status(500).send({status:false,message:"some error occured while registering user"})
+    const notAddedResp=new Response(false,"","couldn't register the user.please try again.")
+    res.status(200).send(notAddedResp)
 }
 } catch (error) {
+    const errResp=new Response(false,"","internal server error. please try again")
     console.log(error)
-    res.status(500).send({status:false,message:"some error occured while registering user"})
+    res.status(500).send(errResp)
 }
 }
 
@@ -31,18 +34,21 @@ export const loginController =async (req,res) => {
             const match=await comparePassword(password,userFound.password)
             const token=await genToken(userFound._id)
             if(match){
-                res.cookie("token",token,{httpOnly:true})
-                res.status(200).send({status:true,message:"user loggedin sucessfully"})
+                const matchResp= new Response(true, {token:token},"user logged in sucessfully")
+                res.status(200).send(matchResp)
             }else{
-                res.status(200).send({status:false,message:"invalid credentials"})
+                const notMatchResp=new Response(false,"","invalid credentials")
+                res.status(200).send(notMatchResp)
             }
            
         }else{
-            res.status(500).send({status:false,message:"invalid credentials"})
+            const notFoundResp=new Response(false,"","user doen't exist" )
+            res.status(200).send(notFoundResp)
         }
     } catch (error) {
         console.log(error);
-        res.status(500).send({status:false,message:"invalid credentials"})
+        const errResp=new Response(false,"","error occured while loggin in")
+        res.status(500).send(errResp)
         
     }
 };

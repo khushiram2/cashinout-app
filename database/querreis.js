@@ -17,3 +17,12 @@ try {
     console.log(error)
 }    
 };
+
+
+export const getUserById = async (id) => {
+    try {
+        return await User.findById(id)
+    } catch (error) {
+        console.log(error)
+    }
+}
