@@ -4,7 +4,7 @@ import { loginController, registerUserController } from "../conrollers/authcontr
 
 const router=Router()
 
-router.get('/', (req, res) => {
+router.get('/', (_, res) => {
   res.send('GET request to the homepage')
 })
 router.post("/register",isEmailUnique,registerUserController)

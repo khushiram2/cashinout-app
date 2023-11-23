@@ -11,7 +11,7 @@ try {
     const userAddedToDB=await addNewUser({...userData,password:hashedPassword})
 if(userAddedToDB){
     const token=await genToken(userAddedToDB._id)
-    const addedUserResp=new Response(true,{token:token},"user registered sucessfully")
+    const addedUserResp=new Response(true,{token:token,id:userAddedToDB._id},"user registered sucessfully")
     res.status(200).send(addedUserResp)
 }else{
     const notAddedResp=new Response(false,"","couldn't register the user.please try again.")

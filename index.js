@@ -3,7 +3,6 @@ import * as dotenv from "dotenv"
 import cors from "cors"
 import { DBconnection } from "./database/connection.js";
 import { authRouter } from "./Routes/authRoute.js";
-import cookieParser from "cookie-parser";
 dotenv.config()
 
 await DBconnection()
@@ -15,7 +14,6 @@ const corsOrigin={
 }
 app.use(json())
 app.use(cors(corsOrigin))
-app.use(cookieParser())
 
 app.use("/auth",authRouter)
 
